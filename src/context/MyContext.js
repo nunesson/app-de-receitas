@@ -1,7 +1,5 @@
-import React from 'react';
+import { createContext } from 'react';
 
-export default function MyContext() {
-  return (
-    <div>MyContext</div>
-  );
-}
+const MyContext = createContext();
+
+export default MyContext;
