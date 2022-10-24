@@ -1,7 +1,7 @@
 .meals {
   align-items: center;
   background: #0fa36b;
-  color: #464646;
+  color: #c3eec1;
   display: flex;
   flex-direction: column;
   font-family: sans-serif;
@@ -37,6 +37,13 @@
   font-weight: 900;
 }
 
+.login-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 @keyframes shake {
 
   0% {
@@ -65,4 +72,12 @@
   100% {
     transform: rotate(-10deg);
   }
+}
+
+form fieldset {
+  align-content: space-around;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
