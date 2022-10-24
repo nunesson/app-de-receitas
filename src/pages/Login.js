@@ -1,4 +1,6 @@
 import React, { useContext, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import MyContext from '../context/MyContext';
 
 function Login() {
@@ -18,8 +20,11 @@ function Login() {
     validateInput();
   });
 
+  const history = useHistory();
+
   const handleClick = () => {
     localStorage.setItem('user', JSON.stringify({ email }));
+    history.push('/meals');
   };
 
   return (
@@ -63,5 +68,11 @@ function Login() {
     </div>
   );
 }
+
+Login.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
+}.isRequired;
 
 export default Login;
