@@ -14,7 +14,7 @@ export default function Footer() {
           src={ mealIcon }
         />
       </Link>
-      <Link to="/drink">
+      <Link to="/drinks">
         <img
           data-testid="drinks-bottom-btn"
           alt="Ícone botão de refeições"

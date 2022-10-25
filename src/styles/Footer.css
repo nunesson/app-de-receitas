@@ -1,11 +1,10 @@
-footer{
-  width: 100%;
-  height: 60px;
-  position: fixed;
+footer {
+  background-color: #0c8a59;
   bottom: 0;
+  height: 60px;
   left: 0;
   padding: 10px;
-  background-color: #0c8a59;
+  position: fixed;
   text-align: center;
-
+  width: 100%;
 }
