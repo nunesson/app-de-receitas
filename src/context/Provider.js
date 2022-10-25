@@ -8,6 +8,7 @@ function Provider({ children }) {
   const [btnDisable, setBtnDisable] = useState(true);
   const [headerTitle, setHeaderTitle] = useState('');
   const [hideSearch, setHideSearch] = useState(true);
+  const [searchBar, setSearchBar] = useState(false);
 
   const data = useMemo(
     () => ({
@@ -16,13 +17,15 @@ function Provider({ children }) {
       btnDisable,
       headerTitle,
       hideSearch,
+      searchBar,
       setEmail,
       setPassword,
       setBtnDisable,
       setHeaderTitle,
       setHideSearch,
+      setSearchBar,
     }),
-    [btnDisable, email, headerTitle, hideSearch, password],
+    [btnDisable, email, headerTitle, hideSearch, password, searchBar],
   );
 
   return (
