@@ -12,14 +12,16 @@ function Header() {
         alt="Profile"
         data-testid="profile-top-btn"
       />
-      { hideSearch
+      {
+        hideSearch
       && (
         <img
           src={ searchIcon }
           alt="Profile"
           data-testid="search-top-btn"
         />
-      )}
+      )
+      }
       <br />
       <h1 data-testid="page-title">{ headerTitle }</h1>
     </div>
