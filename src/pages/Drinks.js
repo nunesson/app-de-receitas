@@ -1,22 +1,21 @@
-import React, { useContext, useEffect } from 'react';
-import Footer from '../components/Footer';
+import React, { Component } from 'react';
+import Recipes from '../components/Recipes';
 import Header from '../components/Header';
-import MyContext from '../context/MyContext';
+// dagen ett
 
-function Drinks() {
-  const { setHeaderTitle, setHideSearch } = useContext(MyContext);
+class Drinks extends Component {
+  state = {
+    foodTrue: false,
+  };
 
-  useEffect(() => {
-    setHeaderTitle('Drinks');
-    setHideSearch(true);
-  });
-
-  return (
-    <div>
-      <Header />
-      <Footer />
-    </div>
-  );
+  render() {
+    const { foodTrue } = this.state;
+    return (
+      <div>
+        <Header title="Drinks" />
+        <Recipes show={ foodTrue } />
+      </div>
+    );
+  }
 }
-
 export default Drinks;

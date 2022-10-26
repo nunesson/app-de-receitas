@@ -1,20 +1,22 @@
-import React, { useContext, useEffect } from 'react';
-import Footer from '../components/Footer';
+import React, { Component } from 'react';
+import Recipes from '../components/Recipes';
 import Header from '../components/Header';
-import MyContext from '../context/MyContext';
 
-export default function Comidas() {
-  const { setHeaderTitle, setHideSearch } = useContext(MyContext);
+class Meals extends Component {
+  state = {
+    foodTrue: true,
+  };
 
-  useEffect(() => {
-    setHeaderTitle('Meals');
-    setHideSearch(true);
-  });
+  // dagen ett
 
-  return (
-    <div>
-      <Header />
-      <Footer />
-    </div>
-  );
+  render() {
+    const { foodTrue } = this.state;
+    return (
+      <div>
+        <Header title="Meals" />
+        <Recipes show={ foodTrue } />
+      </div>
+    );
+  }
 }
+export default Meals;
