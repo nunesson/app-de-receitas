@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import Recipes from '../components/Recipes';
+// import Recipes from '../components/Recipes';
 import Header from '../components/Header';
+import Footer from '../components/Footer';
 // dagen ett
 
 function Drinks() {
