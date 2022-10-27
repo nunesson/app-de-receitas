@@ -7,53 +7,40 @@ export default function SearchBar() {
   const { searchInput,
     setSearchInput,
     setRadioInput,
-    setResults,
-    radioInput,
-    recipeType, headerTitle, setShowRecipes } = useContext(MyContext);
+    setResults, radioInput, recipeType, headerTitle } = useContext(MyContext);
 
   const pageTitle = headerTitle.toLowerCase();
 
   const history = useHistory();
 
-  const errorAlert = 'Sorry, we haven\'t found any recipes for these filters.';
-
-  const verifyOneRecipe = (resultAPI) => { // Verifica se encontrou apenas uma receita
+  const verifyOneRecipe = (resultAPI) => {
     if (resultAPI[pageTitle].length === 1 && pageTitle === 'meals') {
       history.push(`/meals/${resultAPI[pageTitle][0].idMeal}`);
+      console.log(resultAPI[pageTitle][0].idMeal);
     } else if (resultAPI[pageTitle].length === 1 && pageTitle === 'drinks') {
+      console.log(resultAPI[pageTitle][0].idDrink);
       history.push(`/drinks/${resultAPI[pageTitle][0].idDrink}`);
     }
   };
 
-  const setResultsFunc = (resultAPI) => { // Verifica se nenhuma receita foi encontrada
-    if (resultAPI[pageTitle] === null) {
-      global.alert(errorAlert);
-    } else {
-      setResults(resultAPI[pageTitle]);
-      verifyOneRecipe(resultAPI);
-    }
-  };
-
-  const apiSearch = async () => { // Realiza a busca na api
+  const handleClick = async () => {
     if (radioInput === 'ingredient') {
       const apiResult = (await fetchAPI(recipeType, 'filter', 'i', searchInput));
-      setResultsFunc(apiResult);
+      setResults(apiResult[pageTitle]);
+      verifyOneRecipe(apiResult);
     } else if (radioInput === 'name') {
       const apiResult = await fetchAPI(recipeType, 'search', 's', searchInput);
-      setResultsFunc(apiResult);
-    } else if (radioInput === 'first') {
-      if (searchInput.length > 1) {
-        global.alert('Your search must have only 1 (one) character');
-      } else {
-        const apiResult = await fetchAPI(recipeType, 'search', 'f', searchInput);
-        setResultsFunc(apiResult);
-      }
+      console.log(apiResult[pageTitle].length);
+      console.log(apiResult);
+      setResults(apiResult[pageTitle]);
+      verifyOneRecipe(apiResult);
+    } else if (radioInput === 'first' && searchInput.length > 1) {
+      global.alert('Your search must have only 1 (one) character');
+    } else {
+      const apiResult = await fetchAPI(recipeType, 'search', 'f', searchInput);
+      setResults(apiResult[pageTitle]);
+      verifyOneRecipe(apiResult);
     }
-  };
-
-  const handleClick = async () => {
-    setShowRecipes(false);
-    apiSearch();
   };
 
   return (
