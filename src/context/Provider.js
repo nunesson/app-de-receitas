@@ -13,6 +13,7 @@ function Provider({ children }) {
   const [radioInput, setRadioInput] = useState('');
   const [results, setResults] = useState([]);
   const [recipeType, setRecipeType] = useState('');
+  const [showRecipes, setShowRecipes] = useState(true);
 
   const data = useMemo(
     () => ({
@@ -26,6 +27,7 @@ function Provider({ children }) {
       radioInput,
       results,
       recipeType,
+      showRecipes,
       setEmail,
       setPassword,
       setBtnDisable,
@@ -36,6 +38,7 @@ function Provider({ children }) {
       setRadioInput,
       setResults,
       setRecipeType,
+      setShowRecipes,
     }),
     [btnDisable,
       email,
@@ -43,7 +46,9 @@ function Provider({ children }) {
       hideSearch,
       password,
       radioInput,
-      results, searchBar, searchInput, recipeType],
+      results,
+      searchBar,
+      searchInput, recipeType, showRecipes],
   );
 
   return (
