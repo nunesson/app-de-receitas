@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
 import Recipes from '../components/Recipes';
 import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 export default function Comidas() {
   const { setHeaderTitle,
@@ -33,4 +33,3 @@ export default function Comidas() {
     </div>
   );
 }
-export default Meals;
