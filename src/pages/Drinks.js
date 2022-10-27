@@ -1,7 +1,7 @@
-// import Recipes from '../components/Recipes';
-import Header from '../components/Header';
+import React, { useContext, useEffect } from 'react';
 import Footer from '../components/Footer';
-// dagen ett
+import Header from '../components/Header';
+import MyContext from '../context/MyContext';
 
 function Drinks() {
   const { setHeaderTitle,
@@ -34,4 +34,5 @@ function Drinks() {
     </div>
   );
 }
+
 export default Drinks;
