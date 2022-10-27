@@ -9,6 +9,10 @@ function Provider({ children }) {
   const [headerTitle, setHeaderTitle] = useState('');
   const [hideSearch, setHideSearch] = useState(true);
   const [searchBar, setSearchBar] = useState(false);
+  const [searchInput, setSearchInput] = useState('');
+  const [radioInput, setRadioInput] = useState('');
+  const [results, setResults] = useState([]);
+  const [recipeType, setRecipeType] = useState('');
 
   const data = useMemo(
     () => ({
@@ -18,14 +22,28 @@ function Provider({ children }) {
       headerTitle,
       hideSearch,
       searchBar,
+      searchInput,
+      radioInput,
+      results,
+      recipeType,
       setEmail,
       setPassword,
       setBtnDisable,
       setHeaderTitle,
       setHideSearch,
       setSearchBar,
+      setSearchInput,
+      setRadioInput,
+      setResults,
+      setRecipeType,
     }),
-    [btnDisable, email, headerTitle, hideSearch, password, searchBar],
+    [btnDisable,
+      email,
+      headerTitle,
+      hideSearch,
+      password,
+      radioInput,
+      results, searchBar, searchInput, recipeType],
   );
 
   return (

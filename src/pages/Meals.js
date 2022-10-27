@@ -2,21 +2,35 @@ import React, { Component } from 'react';
 import Recipes from '../components/Recipes';
 import Header from '../components/Header';
 
-class Meals extends Component {
-  state = {
-    foodTrue: true,
-  };
+export default function Comidas() {
+  const { setHeaderTitle,
+    setHideSearch, setRecipeType, results } = useContext(MyContext);
 
-  // dagen ett
+  useEffect(() => {
+    setHeaderTitle('Meals');
+    setRecipeType('themealdb');
+    setHideSearch(true);
+  });
 
-  render() {
-    const { foodTrue } = this.state;
-    return (
-      <div>
-        <Header title="Meals" />
-        <Recipes show={ foodTrue } />
-      </div>
-    );
-  }
+  const NUMBER_12 = 12;
+
+  return (
+    <div>
+      <Header />
+      {
+        results && results.slice(0, NUMBER_12).map((element, index) => (
+          <div key={ index } data-testid={ `${index}-recipe-card` }>
+            <img
+              src={ element.strMealThumb }
+              alt={ element.strMeal }
+              data-testid={ `${index}-card-img` }
+            />
+            <p data-testid={ `${index}-card-name` }>{element.strMeal}</p>
+          </div>
+        ))
+      }
+      <Footer />
+    </div>
+  );
 }
 export default Meals;
