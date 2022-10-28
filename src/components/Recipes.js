@@ -15,6 +15,7 @@ class Recipes extends Component {
     drinks: [],
     filteredMeal: [],
     filteredDrinks: [],
+    loading: true,
     show: this.props,
   };
 
@@ -27,10 +28,15 @@ class Recipes extends Component {
     const require = await fetch(endPt1);
     const { meals } = await require.json();
 
-    const resMeals = meals.filter((meal, i) => i <= itemsLength);
-    this.setState({
-      meals: resMeals,
-    });
+    if (meals === undefined) {
+      this.setState({ loading: true });
+    } else {
+      const resMeals = meals.filter((meal, i) => i <= itemsLength);
+      this.setState({
+        meals: resMeals,
+        loading: false,
+      });
+    }
   };
 
   filterMealsFtch = async () => {
@@ -38,10 +44,15 @@ class Recipes extends Component {
     const require = await fetch(endPt2);
     const { meals } = await require.json();
 
-    const filteredMeals = meals.filter((meal, i) => i <= filteredItemsLength);
-    this.setState({
-      filteredMeal: filteredMeals,
-    });
+    if (meals === undefined) {
+      this.setState({ loading: true });
+    } else {
+      const filteredMeals = meals.filter((meal, i) => i <= filteredItemsLength);
+      this.setState({
+        filteredMeal: filteredMeals,
+        loading: false,
+      });
+    }
   };
 
   drinkFtch = async () => {
@@ -49,10 +60,15 @@ class Recipes extends Component {
     const require = await fetch(endPt3);
     const { drinks } = await require.json();
 
-    const drinkRes = drinks.filter((drink, i) => i <= cockTailsLength);
-    this.setState({
-      drinks: drinkRes,
-    });
+    if (drinks === undefined) {
+      this.setState({ loading: true });
+    } else {
+      const drinkRes = drinks.filter((drink, i) => i <= cockTailsLength);
+      this.setState({
+        drinks: drinkRes,
+        loading: false,
+      });
+    }
   };
 
   filterDrinkFtch = async () => {
@@ -60,11 +76,16 @@ class Recipes extends Component {
     const require = await fetch(endPt4);
     const { drinks } = await require.json();
 
-    const filteredDrink = drinks
-      .filter((meal, i) => i <= filteredDrinkLength);
-    this.setState({
-      filteredDrinks: filteredDrink,
-    });
+    if (drinks === undefined) {
+      this.setState({ loading: true });
+    } else {
+      const filteredDrink = drinks
+        .filter((meal, i) => i <= filteredDrinkLength);
+      this.setState({
+        filteredDrinks: filteredDrink,
+        loading: false,
+      });
+    }
   };
 
   filtCategoria = async (name) => {
@@ -79,6 +100,7 @@ class Recipes extends Component {
       const resMeals = meals.filter((drink, i) => i <= renderingMeals);
       this.setState({
         meals: resMeals,
+        loading: false,
       });
     } else if (!show) {
       const endPt = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${tipeCat}`;
@@ -87,19 +109,20 @@ class Recipes extends Component {
       const drinkRes = drinks.filter((drink, i) => i <= renderingMeals);
       this.setState({
         drinks: drinkRes,
+        loading: false,
       });
     }
   };
 
   render() {
-    const { meals, drinks, filteredMeal, filteredDrinks } = this.state;
+    const { meals, drinks, filteredMeal, filteredDrinks, loading } = this.state;
     const { show } = this.props;
 
     return (
       <div>
 
         <h2>Filters</h2>
-        { (show ? filteredMeal : filteredDrinks).map(({ strCategory }) => (
+        { !loading && (show ? filteredMeal : filteredDrinks).map(({ strCategory }) => (
           <FoodFilters
             name={ strCategory }
             key={ strCategory }
@@ -116,7 +139,7 @@ class Recipes extends Component {
         </button>
 
         <h2>Recipes</h2>
-        { show && (
+        { !loading && (show && (
           meals.map(({ strMealThumb, strMeal, idMeal }, i) => (<CardFood
             name={ strMeal }
             index={ i }
@@ -124,9 +147,9 @@ class Recipes extends Component {
             key={ i }
             link={ `/meals/${idMeal}` }
           />))
-        )}
+        ))}
 
-        { !show && (
+        {!loading && (!show && (
           drinks.map(({ strDrinkThumb, strDrink, idDrink }, i) => (<CardFood
             key={ i }
             index={ i }
@@ -134,7 +157,7 @@ class Recipes extends Component {
             name={ strDrink }
             link={ `/drinks/${idDrink}` }
           />))
-        )}
+        ))}
 
       </div>
     );
