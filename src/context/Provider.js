@@ -13,6 +13,11 @@ function Provider({ children }) {
   const [radioInput, setRadioInput] = useState('');
   const [results, setResults] = useState([]);
   const [recipeType, setRecipeType] = useState('');
+  const [recipeDetail, setRecipeDetail] = useState();
+  const [mealOrDrink, setMealOrDrink] = useState('');
+  const [ingredients, setIngredients] = useState([]);
+  const [measures, setMeasures] = useState([]);
+  const [ingredientsDrink, setIngredientsDrink] = useState([]);
   const [showRecipes, setShowRecipes] = useState(true);
 
   const data = useMemo(
@@ -27,6 +32,7 @@ function Provider({ children }) {
       radioInput,
       results,
       recipeType,
+      recipeDetail,
       showRecipes,
       setEmail,
       setPassword,
@@ -38,6 +44,15 @@ function Provider({ children }) {
       setRadioInput,
       setResults,
       setRecipeType,
+      setRecipeDetail,
+      mealOrDrink,
+      setMealOrDrink,
+      ingredients,
+      setIngredients,
+      measures,
+      setMeasures,
+      ingredientsDrink,
+      setIngredientsDrink,
       setShowRecipes,
     }),
     [btnDisable,
@@ -48,12 +63,19 @@ function Provider({ children }) {
       radioInput,
       results,
       searchBar,
-      searchInput, recipeType, showRecipes],
+      searchInput,
+      recipeType,
+      showRecipes,
+      recipeDetail,
+      ingredients,
+      ingredientsDrink,
+      mealOrDrink,
+      measures],
   );
 
   return (
     <MyContext.Provider value={ data }>
-      {children}
+      { children }
     </MyContext.Provider>
   );
 }
