@@ -63,10 +63,14 @@ function Provider({ children }) {
       radioInput,
       results,
       searchBar,
-      searchInput, 
-      recipeType, 
-      showRecipes, 
-      recipeDetail],
+      searchInput,
+      recipeType,
+      showRecipes,
+      recipeDetail,
+      ingredients,
+      ingredientsDrink,
+      mealOrDrink,
+      measures],
   );
 
   return (
