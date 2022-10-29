@@ -19,6 +19,8 @@ function Provider({ children }) {
   const [measures, setMeasures] = useState([]);
   const [ingredientsDrink, setIngredientsDrink] = useState([]);
   const [showRecipes, setShowRecipes] = useState(true);
+  const [mealAPI, SetMealAPI] = useState();
+  const [drinkAPI, SetDrinkAPI] = useState();
 
   const data = useMemo(
     () => ({
@@ -54,6 +56,10 @@ function Provider({ children }) {
       ingredientsDrink,
       setIngredientsDrink,
       setShowRecipes,
+      drinkAPI,
+      SetDrinkAPI,
+      mealAPI,
+      SetMealAPI,
     }),
     [btnDisable,
       email,
@@ -70,7 +76,9 @@ function Provider({ children }) {
       ingredients,
       ingredientsDrink,
       mealOrDrink,
-      measures],
+      measures,
+      mealAPI,
+      drinkAPI],
   );
 
   return (
