@@ -3,6 +3,8 @@ import React, { useEffect, useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import fetchAPI from '../services/fetchAPI';
 import MyContext from '../context/MyContext';
+import YoutubeEmbed from '../components/YoutubeEmbed';
+import Recommendations from '../components/Recommendations';
 
 export default function RecipeDetails(props) {
   const {
@@ -14,6 +16,10 @@ export default function RecipeDetails(props) {
     setMeasures,
     ingredients,
     setIngredients,
+    drinkAPI,
+    SetDrinkAPI,
+    mealAPI,
+    SetMealAPI,
   } = useContext(MyContext);
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
@@ -32,8 +38,8 @@ export default function RecipeDetails(props) {
     setLoading(true);
     let result = '';
     if (pathname.includes('meals')) {
-      const drinkAPI = await fetchAPI('thecocktaildb', 'search', 's', '');
-      console.log(drinkAPI);
+      const getDrinkAPI = await fetchAPI('thecocktaildb', 'search', 's', '');
+      SetDrinkAPI(getDrinkAPI.drinks);
       setMealOrDrink('meals');
       const typeRecipe = 'themealdb';
       result = await fetchAPI(typeRecipe, 'lookup', 'i', id);
@@ -41,8 +47,8 @@ export default function RecipeDetails(props) {
       setIngredients(objectEntries(result, 'strIngredient'));
       setMeasures(objectEntries(result, 'strMeasure'));
     } else {
-      const mealAPI = await fetchAPI('themealdb', 'search', 's', '');
-      console.log(mealAPI);
+      const getMealAPI = await fetchAPI('themealdb', 'search', 's', '');
+      SetMealAPI(getMealAPI.meals);
       setMealOrDrink('drinks');
       result = await fetchAPI('thecocktaildb', 'lookup', 'i', id);
       result = result.drinks;
@@ -59,6 +65,7 @@ export default function RecipeDetails(props) {
 
   return (
     <div>
+      {/* { !loading && console.log(drinkAPI) } */ }
       { !loading && (mealOrDrink === 'meals'
         ? (
           <div>
@@ -87,8 +94,10 @@ export default function RecipeDetails(props) {
             </ol>
             <p data-testid="instructions">{ recipeDetail[0].strInstructions }</p>
             <div data-testid="video">
-              { recipeDetail[0].strYoutube }
+              <YoutubeEmbed url={ recipeDetail[0].strYoutube } />
             </div>
+            <Recommendations typeAPI={ drinkAPI } />
+
           </div>
         )
         : (
@@ -120,6 +129,7 @@ export default function RecipeDetails(props) {
               }
             </ol>
             <p data-testid="instructions">{ recipeDetail[0].strInstructions }</p>
+            <Recommendations typeAPI={ mealAPI } />
           </div>
         )
       ) }
