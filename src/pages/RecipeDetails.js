@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useContext, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import fetchAPI from '../services/fetchAPI';
 import MyContext from '../context/MyContext';
 import YoutubeEmbed from '../components/YoutubeEmbed';
@@ -28,6 +28,7 @@ export default function RecipeDetails(props) {
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const { location: { pathname } } = props;
+  const history = useHistory();
 
   const objectEntries = (result, str) => {
     const elementValues = [];
@@ -81,15 +82,20 @@ export default function RecipeDetails(props) {
     }
   };
 
+  const sendToInProgress = () => {
+    history.push(`/${mealOrDrink}/${recipeDetail[0].idMeal
+      || recipeDetail[0].idDrink}/in-progress`);
+  };
+
   useEffect(() => {
     apiData();
-    // setRecipeStatus('done');
+    // setRecipeStatus('new');
     verifyRecipeStatus();
   }, []);
 
   return (
     <div>
-      { !loading && console.log(recipeDetail) }
+      {/* { !loading && console.log(mealOrDrink) } */ }
       { !loading && (
         <div>
           <img
@@ -133,6 +139,18 @@ export default function RecipeDetails(props) {
               </div>
             ) }
           <Recommendations typeAPI={ drinkAPI || mealAPI } />
+          <button
+            data-testid="share-btn"
+            type="button"
+          >
+            Compartilhar
+          </button>
+          <button
+            data-testid="favorite-btn"
+            type="button"
+          >
+            Favoritar
+          </button>
           {
             recipeStatus !== 'done'
             && (
@@ -140,6 +158,7 @@ export default function RecipeDetails(props) {
                 data-testid="start-recipe-btn"
                 type="button"
                 className="startButton"
+                onClick={ sendToInProgress }
               >
                 { recipeStatus === 'new' ? 'Start Recipe' : 'Continue Recipe' }
               </button>
