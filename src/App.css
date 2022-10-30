@@ -53,12 +53,12 @@
   flex-direction: column;
 }
 
-.in-progress-container img {
-  width: 150px;
-}
-
 img {
   width: 30px;
+}
+
+.in-progress-container img {
+  width: 150px;
 }
 
 @keyframes shake {
