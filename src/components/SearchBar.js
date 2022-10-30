@@ -9,7 +9,7 @@ export default function SearchBar() {
     setRadioInput,
     setResults,
     radioInput,
-    recipeType, headerTitle, setShowRecipes } = useContext(MyContext);
+    recipeType, headerTitle, setShowRecipes, results } = useContext(MyContext);
 
   const pageTitle = headerTitle.toLowerCase();
 
@@ -17,11 +17,11 @@ export default function SearchBar() {
 
   const errorAlert = 'Sorry, we haven\'t found any recipes for these filters.';
 
-  const verifyOneRecipe = (resultAPI) => { // Verifica se encontrou apenas uma receita
-    if (resultAPI[pageTitle].length === 1 && pageTitle === 'meals') {
-      history.push(`/meals/${resultAPI[pageTitle][0].idMeal}`);
-    } else if (resultAPI[pageTitle].length === 1 && pageTitle === 'drinks') {
-      history.push(`/drinks/${resultAPI[pageTitle][0].idDrink}`);
+  const verifyOneRecipe = () => { // Verifica se encontrou apenas uma receita
+    if (results.length === 1 && pageTitle === 'meals') {
+      history.push(`/meals/${results[0].idMeal}`);
+    } else if (results.length === 1 && pageTitle === 'drinks') {
+      history.push(`/drinks/${results[0].idDrink}`);
     }
   };
 
@@ -30,7 +30,7 @@ export default function SearchBar() {
       global.alert(errorAlert);
     } else {
       setResults(resultAPI[pageTitle]);
-      verifyOneRecipe(resultAPI);
+      verifyOneRecipe();
     }
   };
 
@@ -43,11 +43,10 @@ export default function SearchBar() {
       setResultsFunc(apiResult);
     } else if (radioInput === 'first') {
       if (searchInput.length > 1) {
-        global.alert('Your search must have only 1 (one) character');
-      } else {
-        const apiResult = await fetchAPI(recipeType, 'search', 'f', searchInput);
-        setResultsFunc(apiResult);
+        return global.alert('Your search must have only 1 (one) character');
       }
+      const apiResult = await fetchAPI(recipeType, 'search', 'f', searchInput);
+      setResultsFunc(apiResult);
     }
   };
 
