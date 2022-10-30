@@ -5,6 +5,7 @@ import fetchAPI from '../services/fetchAPI';
 import MyContext from '../context/MyContext';
 import YoutubeEmbed from '../components/YoutubeEmbed';
 import Recommendations from '../components/Recommendations';
+import '../styles/RecipeDetails.css';
 
 export default function RecipeDetails(props) {
   const {
@@ -17,10 +18,13 @@ export default function RecipeDetails(props) {
     ingredients,
     setIngredients,
     drinkAPI,
-    SetDrinkAPI,
+    setDrinkAPI,
     mealAPI,
-    SetMealAPI,
+    setMealAPI,
+    recipeStatus,
+    setRecipeStatus,
   } = useContext(MyContext);
+
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const { location: { pathname } } = props;
@@ -39,7 +43,7 @@ export default function RecipeDetails(props) {
     let result = '';
     if (pathname.includes('meals')) {
       const getDrinkAPI = await fetchAPI('thecocktaildb', 'search', 's', '');
-      SetDrinkAPI(getDrinkAPI.drinks);
+      setDrinkAPI(getDrinkAPI.drinks);
       setMealOrDrink('meals');
       const typeRecipe = 'themealdb';
       result = await fetchAPI(typeRecipe, 'lookup', 'i', id);
@@ -48,7 +52,7 @@ export default function RecipeDetails(props) {
       setMeasures(objectEntries(result, 'strMeasure'));
     } else {
       const getMealAPI = await fetchAPI('themealdb', 'search', 's', '');
-      SetMealAPI(getMealAPI.meals);
+      setMealAPI(getMealAPI.meals);
       setMealOrDrink('drinks');
       result = await fetchAPI('thecocktaildb', 'lookup', 'i', id);
       result = result.drinks;
@@ -59,79 +63,89 @@ export default function RecipeDetails(props) {
     setLoading(false);
   };
 
+  const verifyRecipeStatus = () => {
+    if (localStorage.getItem('doneRecipes')) {
+      const done = Object.values(JSON.parse(localStorage.getItem('doneRecipes')));
+      const inProgress = Object.values(JSON
+        .parse(localStorage.getItem('inProgressRecipes')));
+      if (done
+        .filter((e) => e.id === recipeDetail[0].idMeal || recipeDetail[0].idDrink)) {
+        setRecipeStatus('done');
+      }
+      if (inProgress
+        .filter((e) => e.id === recipeDetail[0].idMeal || recipeDetail[0].idDrink)) {
+        setRecipeStatus('inProgress');
+      } else {
+        setRecipeStatus('new');
+      }
+    }
+  };
+
   useEffect(() => {
     apiData();
+    // setRecipeStatus('done');
+    verifyRecipeStatus();
   }, []);
 
   return (
     <div>
-      {/* { !loading && console.log(drinkAPI) } */ }
-      { !loading && (mealOrDrink === 'meals'
-        ? (
-          <div>
-            <img
-              src={ recipeDetail[0].strMealThumb }
-              alt={ recipeDetail[0].strMeal }
-              data-testid="recipe-photo"
-            />
-            <h1 data-testid="recipe-title">{ recipeDetail[0].strMeal }</h1>
-            <h3 data-testid="recipe-category">{ recipeDetail[0].strCategory }</h3>
-            <ol>
-              {
-                ingredients.map((element, index) => {
-                  if (element) {
-                    return (
-                      <li
-                        data-testid={ `${index}-ingredient-name-and-measure` }
-                        key={ index }
-                      >
-                        { `${measures[index]} ${element}` }
-                      </li>
-                    );
-                  } return null;
-                })
-              }
-            </ol>
-            <p data-testid="instructions">{ recipeDetail[0].strInstructions }</p>
-            <div data-testid="video">
-              <YoutubeEmbed url={ recipeDetail[0].strYoutube } />
-            </div>
-            <Recommendations typeAPI={ drinkAPI } />
-
-          </div>
-        )
-        : (
-          <div>
-            <img
-              src={ recipeDetail[0].strDrinkThumb }
-              alt={ recipeDetail[0].strDrink }
-              data-testid="recipe-photo"
-            />
-            <h1 data-testid="recipe-title">{ recipeDetail[0].strDrink }</h1>
-            <h3 data-testid="recipe-category">
-              { `${recipeDetail[0].strCategory} ${recipeDetail[0].strAlcoholic}` }
-            </h3>
-            <ol>
-
-              {
-                ingredients.map((elem, index) => {
-                  if (elem !== null) {
-                    return (
-                      <li
-                        data-testid={ `${index}-ingredient-name-and-measure` }
-                        key={ index }
-                      >
-                        { `${measures[index]} ${elem}` }
-                      </li>
-                    );
-                  } return null;
-                })
-              }
-            </ol>
-            <p data-testid="instructions">{ recipeDetail[0].strInstructions }</p>
-            <Recommendations typeAPI={ mealAPI } />
-          </div>
-        )
+      { !loading && console.log(recipeDetail) }
+      { !loading && (
+        <div>
+          <img
+            src={ recipeDetail[0].strMealThumb || recipeDetail[0].strDrinkThumb }
+            alt={ recipeDetail[0].strMeal || recipeDetail[0].strDrink }
+            data-testid="recipe-photo"
+          />
+          <h1
+            data-testid="recipe-title"
+          >
+            { recipeDetail[0].strMeal || recipeDetail[0].strDrink }
+          </h1>
+          <h3
+            data-testid="recipe-category"
+          >
+            { recipeDetail[0].strCategory }
+            { ' ' }
+            { mealOrDrink === 'drinks' && recipeDetail[0].strAlcoholic }
+          </h3>
+          <ol>
+            {
+              ingredients.map((element, index) => {
+                if (element) {
+                  return (
+                    <li
+                      data-testid={ `${index}-ingredient-name-and-measure` }
+                      key={ index }
+                    >
+                      { `${measures[index]} ${element}` }
+                    </li>
+                  );
+                } return null;
+              })
+            }
+          </ol>
+          <p data-testid="instructions">{ recipeDetail[0].strInstructions }</p>
+          { mealOrDrink === 'meals'
+            && (
+              <div data-testid="video">
+                <YoutubeEmbed url={ recipeDetail[0].strYoutube } />
+              </div>
+            ) }
+          <Recommendations typeAPI={ drinkAPI || mealAPI } />
+          {
+            recipeStatus !== 'done'
+            && (
+              <button
+                data-testid="start-recipe-btn"
+                type="button"
+                className="startButton"
+              >
+                { recipeStatus === 'new' ? 'Start Recipe' : 'Continue Recipe' }
+              </button>
+            )
+          }
+        </div>
       ) }
     </div>
   );
