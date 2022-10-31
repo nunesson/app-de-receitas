@@ -24,6 +24,12 @@ function Provider({ children }) {
   const [recipeStatus, setRecipeStatus] = useState([]);
   const [inProgress, setInProgress] = useState([]);
   const [checkbox, setCheckbox] = useState();
+  const [recipesFilter, setRecipesFilter] = useState({
+    all: true,
+    meals: false,
+    drinks: false,
+  });
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
 
   const data = useMemo(
     () => ({
@@ -41,6 +47,8 @@ function Provider({ children }) {
       showRecipes,
       inProgress,
       checkbox,
+      recipesFilter,
+      isAlertVisible,
       setEmail,
       setPassword,
       setBtnDisable,
@@ -69,6 +77,8 @@ function Provider({ children }) {
       setRecipeStatus,
       setInProgress,
       setCheckbox,
+      setRecipesFilter,
+      setIsAlertVisible,
     }),
     [btnDisable,
       email,
@@ -91,7 +101,8 @@ function Provider({ children }) {
       recipeStatus,
       inProgress,
       checkbox,
-    ],
+      recipesFilter,
+      isAlertVisible],
   );
 
   return (
