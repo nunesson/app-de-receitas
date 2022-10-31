@@ -22,6 +22,8 @@ function Provider({ children }) {
   const [mealAPI, setMealAPI] = useState();
   const [drinkAPI, setDrinkAPI] = useState();
   const [recipeStatus, setRecipeStatus] = useState([]);
+  const [inProgress, setInProgress] = useState([]);
+  const [checkbox, setCheckbox] = useState();
 
   const data = useMemo(
     () => ({
@@ -37,6 +39,8 @@ function Provider({ children }) {
       recipeType,
       recipeDetail,
       showRecipes,
+      inProgress,
+      checkbox,
       setEmail,
       setPassword,
       setBtnDisable,
@@ -63,6 +67,8 @@ function Provider({ children }) {
       setMealAPI,
       recipeStatus,
       setRecipeStatus,
+      setInProgress,
+      setCheckbox,
     }),
     [btnDisable,
       email,
@@ -83,6 +89,8 @@ function Provider({ children }) {
       mealAPI,
       drinkAPI,
       recipeStatus,
+      inProgress,
+      checkbox,
     ],
   );
 
