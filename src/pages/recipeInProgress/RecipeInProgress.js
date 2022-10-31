@@ -11,11 +11,10 @@ export default function RecipeInProgress(props) {
     inProgress,
     ingredients,
     setIngredients,
-    setCheckbox,
   } = useContext(MyContext);
 
   const [loading, setLoading] = useState(true);
-  // const [ingredientCheck, setIngredientCheck] = useState(false);
+  // const [recipe, setRecipe] = useState({ drinks: [], meals: [] });
 
   const { id } = useParams();
   const { location: { pathname } } = props;
@@ -52,16 +51,12 @@ export default function RecipeInProgress(props) {
     apiData();
   }, []);
 
-  useEffect(() => {
-    const getElements = () => {
-      const check = Array.from(document.querySelectorAll('.check-ingredient'));
-
-      const isTrue = check.every(({ checked }) => checked === true);
-
-      setCheckbox(isTrue);
-    };
-    getElements();
-  }, []);
+  // const handleCheck = (elem) => { // ====> TENTATIVA DE FAZER O ARRAY DE OBJETOS
+  //   const ingredient = [];
+  //   const { meals: { id } } = recipe;
+  //   ingredient.push(elem, ...id);
+  //   setRecipe({ meals: { id: ingredient } });
+  // };
 
   return (
     <div>
@@ -96,23 +91,19 @@ export default function RecipeInProgress(props) {
                 ingredients.map((element, index) => {
                   if (element) {
                     return (
-                      <div
-                        key={ index }
-                        data-testid={ `${index}-ingredient-step` }
-                        className="strikethrough"
-                      >
-                        <input
-                          data-testid={ `${index}-ingredient-step` }
-                          className="check-ingredient"
-                          name={ element }
-                          type="checkbox"
-                          id={ element }
-                        />
+                      <div key={ index }>
                         <label
-                          data-testid="ingredient-step"
+                          data-testid={ `${index}-ingredient-step` }
                           htmlFor={ element }
                           className="strikethrough"
                         >
+                          <input
+                            className="check-ingredient"
+                            name={ element }
+                            type="checkbox"
+                            id={ element }
+                            // onChange={ () => handleCheck(element) }
+                          />
                           {element}
                         </label>
                       </div>

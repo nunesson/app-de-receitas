@@ -1,6 +1,8 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import MyContext from './MyContext';
+import fetchAPI from '../services/fetchAPI';
 
 function Provider({ children }) {
   const [email, setEmail] = useState('');
@@ -24,6 +26,44 @@ function Provider({ children }) {
   const [recipeStatus, setRecipeStatus] = useState([]);
   const [inProgress, setInProgress] = useState([]);
   const [checkbox, setCheckbox] = useState();
+
+  const history = useHistory();
+
+  const pageTitle = headerTitle.toLowerCase();
+
+  const errorAlert = 'Sorry, we haven\'t found any recipes for these filters.';
+
+  const setResultsFunc = useCallback((resultAPI) => { // Verifica se nenhuma receita foi encontrada
+    if (resultAPI[pageTitle] === null) {
+      global.alert(errorAlert);
+    } else {
+      setResults(resultAPI[pageTitle]);
+    }
+  }, [pageTitle]);
+
+  const apiSearch = useCallback(async () => { // Realiza a busca na api
+    if (radioInput === 'ingredient') {
+      const apiResult = (await fetchAPI(recipeType, 'filter', 'i', searchInput));
+      setResultsFunc(apiResult);
+    } else if (radioInput === 'name') {
+      const apiResult = await fetchAPI(recipeType, 'search', 's', searchInput);
+      setResultsFunc(apiResult);
+    } else if (radioInput === 'first') {
+      if (searchInput.length > 1) {
+        return global.alert('Your search must have only 1 (one) character');
+      }
+      const apiResult = await fetchAPI(recipeType, 'search', 'f', searchInput);
+      setResultsFunc(apiResult);
+    }
+  }, [radioInput, recipeType, searchInput, setResultsFunc]);
+
+  useEffect(() => {
+    if (results.length === 1 && pageTitle === 'meals') {
+      history.push(`/meals/${results[0].idMeal}`);
+    } else if (results.length === 1 && pageTitle === 'drinks') {
+      history.push(`/drinks/${results[0].idDrink}`);
+    }
+  }, [history, pageTitle, results]);
 
   const data = useMemo(
     () => ({
@@ -69,6 +109,8 @@ function Provider({ children }) {
       setRecipeStatus,
       setInProgress,
       setCheckbox,
+      setResultsFunc,
+      apiSearch,
     }),
     [btnDisable,
       email,
@@ -91,6 +133,8 @@ function Provider({ children }) {
       recipeStatus,
       inProgress,
       checkbox,
+      setResultsFunc,
+      apiSearch,
     ],
   );
 

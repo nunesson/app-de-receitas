@@ -20,6 +20,7 @@ export default function Comidas() {
   return (
     <div>
       <Header />
+      <title>Meals</title>
       {
         showRecipes
         && <Recipes show={ foodTrue } />
