@@ -16,7 +16,7 @@ function ButtonShare() {
   };
 
   return (
-    <div>
+    <>
       <button
         data-testid="share-btn"
         type="button"
@@ -25,7 +25,7 @@ function ButtonShare() {
         <img src={ shareIcon } alt="shareIcon" />
       </button>
       {link && <p>Link copied!</p>}
-    </div>
+    </>
   );
 }
 
