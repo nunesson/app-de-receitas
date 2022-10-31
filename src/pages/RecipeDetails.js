@@ -6,6 +6,7 @@ import MyContext from '../context/MyContext';
 import YoutubeEmbed from '../components/YoutubeEmbed';
 import Recommendations from '../components/Recommendations';
 import '../styles/RecipeDetails.css';
+import ButtonShare from '../components/ButtonShare';
 
 export default function RecipeDetails(props) {
   const {
@@ -139,12 +140,7 @@ export default function RecipeDetails(props) {
               </div>
             ) }
           <Recommendations typeAPI={ drinkAPI || mealAPI } />
-          <button
-            data-testid="share-btn"
-            type="button"
-          >
-            Compartilhar
-          </button>
+          <ButtonShare />
           <button
             data-testid="favorite-btn"
             type="button"
