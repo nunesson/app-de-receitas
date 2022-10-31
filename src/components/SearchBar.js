@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import MyContext from '../context/MyContext';
 import fetchAPI from '../services/fetchAPI';
@@ -49,6 +49,10 @@ export default function SearchBar() {
       setResultsFunc(apiResult);
     }
   };
+
+  useEffect(() => {
+    verifyOneRecipe();
+  });
 
   const handleClick = async () => {
     setShowRecipes(false);
