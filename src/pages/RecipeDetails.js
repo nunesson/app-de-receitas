@@ -6,6 +6,8 @@ import MyContext from '../context/MyContext';
 import YoutubeEmbed from '../components/YoutubeEmbed';
 import Recommendations from '../components/Recommendations';
 import '../styles/RecipeDetails.css';
+import ButtonShare from '../components/ButtonShare';
+import FavoriteButton from '../components/FavoriteButton';
 
 export default function RecipeDetails(props) {
   const {
@@ -13,6 +15,7 @@ export default function RecipeDetails(props) {
     setRecipeDetail,
     mealOrDrink,
     setMealOrDrink,
+    setRecipeType,
     measures,
     setMeasures,
     ingredients,
@@ -44,6 +47,7 @@ export default function RecipeDetails(props) {
     let result = '';
     if (pathname.includes('meals')) {
       const getDrinkAPI = await fetchAPI('thecocktaildb', 'search', 's', '');
+      setRecipeType('meal');
       setDrinkAPI(getDrinkAPI.drinks);
       setMealOrDrink('meals');
       const typeRecipe = 'themealdb';
@@ -53,6 +57,7 @@ export default function RecipeDetails(props) {
       setMeasures(objectEntries(result, 'strMeasure'));
     } else {
       const getMealAPI = await fetchAPI('themealdb', 'search', 's', '');
+      setRecipeType('drink');
       setMealAPI(getMealAPI.meals);
       setMealOrDrink('drinks');
       result = await fetchAPI('thecocktaildb', 'lookup', 'i', id);
@@ -139,18 +144,8 @@ export default function RecipeDetails(props) {
               </div>
             ) }
           <Recommendations typeAPI={ drinkAPI || mealAPI } />
-          <button
-            data-testid="share-btn"
-            type="button"
-          >
-            Compartilhar
-          </button>
-          <button
-            data-testid="favorite-btn"
-            type="button"
-          >
-            Favoritar
-          </button>
+          <ButtonShare />
+          <FavoriteButton />
           {
             recipeStatus !== 'done'
             && (
