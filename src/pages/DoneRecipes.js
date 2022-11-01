@@ -122,7 +122,7 @@ function DoneRecipes() {
   const showMeals = () => {
     if (doneRecipes !== null && doneRecipes.some(({ type }) => type === 'meal')) {
       const doneMeals = doneRecipes.filter(({ type }) => type === 'meal');
-      recipeCard(doneMeals);
+      return recipeCard(doneMeals);
     }
     return <div><h3>No meal recipe done</h3></div>;
   };
@@ -130,7 +130,7 @@ function DoneRecipes() {
   const showDrinks = () => {
     if (doneRecipes !== null && doneRecipes.some(({ type }) => type === 'drink')) {
       const doneDrinks = doneRecipes.filter(({ type }) => type === 'drink');
-      recipeCard(doneDrinks);
+      return recipeCard(doneDrinks);
     }
     return <div><h3>No drink recipe done</h3></div>;
   };
