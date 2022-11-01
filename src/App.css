@@ -1,4 +1,4 @@
-.check-ingredient:checked + .strikethrough {
+.strikethrough:has( .check-ingredient:checked ) {
   text-decoration: line-through solid black;
 }
 
