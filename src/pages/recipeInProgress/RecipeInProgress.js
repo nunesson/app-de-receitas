@@ -51,7 +51,7 @@ export default function RecipeInProgress(props) {
     apiData();
   }, []);
 
-  // const handleCheck = (elem) => { // ====> TENTATIVA DE FAZER O ARRAY DE OBJETOS
+  // const handleCheck = (elem) => { // ==> TENTATIVA DE FAZER O ARRAY DE OBJETOS
   //   const ingredient = [];
   //   const { meals: { id } } = recipe;
   //   ingredient.push(elem, ...id);
