@@ -162,17 +162,14 @@ function DoneRecipes() {
           Drinks
         </button>
       </div>
-
       <div>
         {isAlertVisible && <div>Link copied!</div>}
         {recipesFilter.all && showAll()}
         {recipesFilter.meals && showMeals()}
         {recipesFilter.drinks && showDrinks()}
       </div>
-
       <Footer />
     </div>
   );
 }
-
 export default DoneRecipes;
