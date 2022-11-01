@@ -1,4 +1,4 @@
-.strikethrough:has( .check-ingredient:checked ) {
+.strikethrough:has( > .check-ingredient:checked ) {
   text-decoration: line-through solid black;
 }
 
@@ -98,3 +98,7 @@ form fieldset {
   flex-direction: column;
   justify-content: center;
 }
+
+/* .label:has( > .checkbox:checked ) {
+  text-decoration: line-through solid black;
+} */

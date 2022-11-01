@@ -14,7 +14,15 @@ export default function RecipeInProgress(props) {
   } = useContext(MyContext);
 
   const [loading, setLoading] = useState(true);
-  // const [recipe, setRecipe] = useState({ drinks: [], meals: [] });
+  // const [recipe, setRecipe] = useState({});
+
+  const initalStateChecked = {};
+
+  ingredients.forEach((el, index) => { initalStateChecked[index] = el; });
+
+  // console.log(initalStateChecked);
+
+  // const [isChecked, setIsChecked] = useState(initalStateChecked);
 
   const { id } = useParams();
   const { location: { pathname } } = props;
@@ -43,24 +51,31 @@ export default function RecipeInProgress(props) {
     }
     setInProgress(result);
     setLoading(false);
-    console.log(result);
-    console.log(inProgress);
   };
 
   useEffect(() => {
     apiData();
   }, []);
 
-  // const handleCheck = (elem) => { // ==> TENTATIVA DE FAZER O ARRAY DE OBJETOS
-  //   const ingredient = [];
-  //   const { meals: { id } } = recipe;
-  //   ingredient.push(elem, ...id);
-  //   setRecipe({ meals: { id: ingredient } });
-  // };
+  const handleCheck = async (elem) => { // ==> TENTATIVA DE FAZER O ARRAY DE OBJETOS
+    const getLocalStorage = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    const { meals } = getLocalStorage;
+    console.log(meals);
+    const objInProgress = {
+      drinks: {
+      },
+      meals: {
+      },
+    };
+    objInProgress.meals[id] = [...meals[id], elem];
+    localStorage.setItem('inProgressRecipes', JSON.stringify(objInProgress));
+
+    // setRecipe({ inProgressRecipes: objInProgress });
+  };
 
   return (
     <div>
-      { !loading && console.log('inprogress', inProgress)}
+      {/* { !loading && console.log(recipe.inProgressRecipes.meals[id])} */}
       {
         !loading && (
           <div className="in-progess-container">
@@ -99,10 +114,11 @@ export default function RecipeInProgress(props) {
                         >
                           <input
                             className="check-ingredient"
-                            name={ element }
+                            name={ index }
                             type="checkbox"
                             id={ element }
-                            // onChange={ () => handleCheck(element) }
+                            // checked={ isChecked[index] }
+                            onChange={ () => handleCheck(element) }
                           />
                           {element}
                         </label>
