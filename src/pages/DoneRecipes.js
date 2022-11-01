@@ -15,17 +15,13 @@ function DoneRecipes() {
     isAlertVisible,
     setIsAlertVisible } = useContext(MyContext);
 
-  // const { setHeaderTitle,
-  //   setHideSearch,
-  //   setRecipesFilter } = useContext(MyContext);
-
   useEffect(() => {
     setHeaderTitle('Done Recipes');
     setHideSearch(false);
-    JSON.stringify(localStorage.setItem('doneRecipes', '[]'));
     const storageDoneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
     setDoneRecipes(storageDoneRecipes);
-  }, [setHeaderTitle, setHideSearch]);
+  }, []);
+
   const defineRightText = (recipe, index) => {
     if (recipe.type === 'meal') {
       return (
@@ -77,142 +73,72 @@ function DoneRecipes() {
     }, THREE_SECONDS);
   };
 
-  const showAll = () => (doneRecipes.map((recipe, index) => (
-    <div key={ recipe.id }>
-      <Link to={ redirectPage(recipe.type, recipe.id) }>
-        <img
-          src={ recipe.image }
-          alt={ recipe.name }
-          data-testid={ `${index}-horizontal-image` }
-        />
-      </Link>
-      <Link to={ redirectPage(recipe.type, recipe.id) }>
-        <p
-          data-testid={ `${index}-horizontal-name` }
-        >
-          {recipe.name}
-        </p>
-      </Link>
-      {defineRightText(recipe, index)}
-      <p
-        data-testid={ `${index}-horizontal-done-date` }
-      >
-        Done in:
-        {' '}
-        {recipe.doneDate}
-      </p>
-      {defineTagOrNot(recipe.type, index, recipe.tags)}
-      <button
-        type="button"
-        data-testid={ `${index}-horizontal-share-btn` }
-        src={ shareIcon }
-        onClick={ () => handleShareBtn(recipe.type, recipe.id) }
-      >
-        <img src={ shareIcon } alt="Share" />
-      </button>
-    </div>
-  )));
-
-  const showMeals = () => {
-    const doneMeals = doneRecipes.filter(({ type }) => type === 'meal');
-    return (doneMeals.map((recipe, index) => (
-      <div key={ recipe.id }>
-        <Link to={ redirectPage(recipe.type, recipe.id) }>
+  const recipeCard = (recipes) => (recipes.map((recipe, index) => {
+    const { id, type, image, name, doneDate, tags } = recipe;
+    return (
+      <div key={ id }>
+        <Link to={ redirectPage(type, id) }>
           <img
-            src={ recipe.image }
-            alt={ recipe.name }
+            src={ image }
+            alt={ name }
             data-testid={ `${index}-horizontal-image` }
           />
         </Link>
-        <Link to={ redirectPage(recipe.type, recipe.id) }>
+        <Link to={ redirectPage(type, id) }>
           <p
             data-testid={ `${index}-horizontal-name` }
           >
-            {recipe.name}
+            {name}
           </p>
         </Link>
-        <p
-          data-testid={ `${index}-horizontal-top-text` }
-        >
-          {`${recipe.nationality} - ${recipe.category}`}
-        </p>
+        {defineRightText(recipe, index)}
         <p
           data-testid={ `${index}-horizontal-done-date` }
         >
           Done in:
           {' '}
-          {recipe.doneDate}
+          {doneDate}
         </p>
-        <p>
-          <span
-            data-testid={ `${index}-${recipe.tags[0]}-horizontal-tag` }
-          >
-            {recipe.tags[0]}
-          </span>
-          {' '}
-          <span
-            data-testid={ `${index}-${recipe.tags[1]}-horizontal-tag` }
-          >
-            {recipe.tags[1]}
-          </span>
-        </p>
+        {defineTagOrNot(type, index, tags)}
         <button
           type="button"
           data-testid={ `${index}-horizontal-share-btn` }
           src={ shareIcon }
-          onClick={ () => handleShareBtn(recipe.type, recipe.id) }
+          onClick={ () => handleShareBtn(type, id) }
         >
           <img src={ shareIcon } alt="Share" />
         </button>
       </div>
-    )));
+    );
+  }));
+
+  const showAll = () => {
+    if (doneRecipes !== null && doneRecipes.length !== 0) {
+      return recipeCard(doneRecipes);
+    }
+    return <div><h3>No recipe done</h3></div>;
+  };
+
+  const showMeals = () => {
+    if (doneRecipes !== null && doneRecipes.some(({ type }) => type === 'meal')) {
+      const doneMeals = doneRecipes.filter(({ type }) => type === 'meal');
+      return recipeCard(doneMeals);
+    }
+    return <div><h3>No meal recipe done</h3></div>;
   };
 
   const showDrinks = () => {
-    const doneDrinks = doneRecipes.filter(({ type }) => type === 'drink');
-    return (doneDrinks.map((recipe, index) => (
-      <div key={ recipe.id }>
-        <Link to={ redirectPage(recipe.type, recipe.id) }>
-          <img
-            src={ recipe.image }
-            alt={ recipe.name }
-            data-testid={ `${index}-horizontal-image` }
-          />
-        </Link>
-        <Link to={ redirectPage(recipe.type, recipe.id) }>
-          <p
-            data-testid={ `${index}-horizontal-name` }
-          >
-            {recipe.name}
-          </p>
-        </Link>
-        <p
-          data-testid={ `${index}-horizontal-top-text` }
-        >
-          {recipe.alcoholicOrNot}
-        </p>
-        <p
-          data-testid={ `${index}-horizontal-done-date` }
-        >
-          Done in:
-          {' '}
-          {recipe.doneDate}
-        </p>
-        <button
-          type="button"
-          data-testid={ `${index}-horizontal-share-btn` }
-          src={ shareIcon }
-          onClick={ () => handleShareBtn(recipe.type, recipe.id) }
-        >
-          <img src={ shareIcon } alt="Share" />
-        </button>
-      </div>
-    )));
+    if (doneRecipes !== null && doneRecipes.some(({ type }) => type === 'drink')) {
+      const doneDrinks = doneRecipes.filter(({ type }) => type === 'drink');
+      return recipeCard(doneDrinks);
+    }
+    return <div><h3>No drink recipe done</h3></div>;
   };
 
   return (
     <div>
       <Header />
+
       <div>
         <button
           type="button"

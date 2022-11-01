@@ -1,12 +1,52 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import MyContext from '../context/MyContext';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 function FavoriteButton() {
   const { recipeDetail, recipeType } = useContext(MyContext);
+  const [buttonClick, setButtonClick] = useState(false);
+
+  const initialFavorite = () => {
+    const favoriteItems = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    const { idMeal, idDrink } = recipeDetail[0];
+    if (recipeType === 'meal') {
+      let a = false;
+      favoriteItems.forEach((e) => {
+        if (e.id === idMeal) {
+          a = true;
+        }
+      });
+      return a;
+    }
+    let b = false;
+    favoriteItems.forEach((e) => {
+      if (e.id === idDrink) {
+        b = true;
+      }
+    });
+    return b;
+  };
 
   useEffect(() => {
-    localStorage.setItem('favoriteRecipes', JSON.stringify([]));
+    if (!localStorage.getItem('favoriteRecipes')) {
+      console.log(localStorage.getItem('favoriteRecipes'));
+      localStorage.setItem('favoriteRecipes', JSON.stringify([]));
+    } else if (initialFavorite()) {
+      setButtonClick(true);
+    }
   }, []);
+
+  const setButton = (id) => {
+    if (buttonClick === false) {
+      setButtonClick(true);
+    } else {
+      setButtonClick(false);
+      const a = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      const b = a.filter((e) => e.id !== id);
+      localStorage.setItem('favoriteRecipes', JSON.stringify(b));
+    }
+  };
 
   const handleClick = () => {
     const a = JSON.parse(localStorage.getItem('favoriteRecipes'));
@@ -25,6 +65,7 @@ function FavoriteButton() {
           nationality: strArea,
           type: recipeType,
         }]));
+      setButton(idMeal);
     } else {
       const {
         idDrink,
@@ -40,6 +81,7 @@ function FavoriteButton() {
           nationality: '',
           type: recipeType,
         }]));
+      setButton(idDrink);
     }
   };
 
@@ -48,8 +90,13 @@ function FavoriteButton() {
       data-testid="favorite-btn"
       type="button"
       onClick={ handleClick }
+      src={ buttonClick ? blackHeartIcon : whiteHeartIcon }
+      alt={ buttonClick ? 'blackHeartIcon' : 'whiteHeartIcon' }
     >
-      Favoritar
+      <img
+        src={ buttonClick ? blackHeartIcon : whiteHeartIcon }
+        alt={ buttonClick ? 'blackHeartIcon' : 'whiteHeartIcon' }
+      />
     </button>
   );
 }
