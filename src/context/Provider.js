@@ -26,6 +26,12 @@ function Provider({ children }) {
   const [recipeStatus, setRecipeStatus] = useState([]);
   const [inProgress, setInProgress] = useState([]);
   const [checkbox, setCheckbox] = useState();
+  const [recipesFilter, setRecipesFilter] = useState({
+    all: true,
+    meals: false,
+    drinks: false,
+  });
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
 
   const history = useHistory();
 
@@ -81,6 +87,8 @@ function Provider({ children }) {
       showRecipes,
       inProgress,
       checkbox,
+      recipesFilter,
+      isAlertVisible,
       setEmail,
       setPassword,
       setBtnDisable,
@@ -111,6 +119,8 @@ function Provider({ children }) {
       setCheckbox,
       setResultsFunc,
       apiSearch,
+      setRecipesFilter,
+      setIsAlertVisible,
     }),
     [btnDisable,
       email,
@@ -135,6 +145,8 @@ function Provider({ children }) {
       checkbox,
       setResultsFunc,
       apiSearch,
+      recipesFilter,
+      isAlertVisible,
     ],
   );
 
