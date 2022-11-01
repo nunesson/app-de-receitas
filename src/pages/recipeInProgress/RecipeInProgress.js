@@ -57,21 +57,19 @@ export default function RecipeInProgress(props) {
     apiData();
   }, []);
 
-  const handleCheck = async (elem) => { // ==> TENTATIVA DE FAZER O ARRAY DE OBJETOS
-    const getLocalStorage = JSON.parse(localStorage.getItem('inProgressRecipes'));
-    const { meals } = getLocalStorage;
-    console.log(meals);
-    const objInProgress = {
-      drinks: {
-      },
-      meals: {
-      },
-    };
-    objInProgress.meals[id] = [...meals[id], elem];
-    localStorage.setItem('inProgressRecipes', JSON.stringify(objInProgress));
-
-    // setRecipe({ inProgressRecipes: objInProgress });
-  };
+  // const handleCheck = async (elem) => { // ==> TENTATIVA DE FAZER O ARRAY DE OBJETOS
+  //   const getLocalStorage = JSON.parse(localStorage.getItem('inProgressRecipes'));
+  //   const { meals } = getLocalStorage;
+  //   console.log(meals);
+  //   const objInProgress = {
+  //     drinks: {
+  //     },
+  //     meals: {
+  //     },
+  //   };
+  //   objInProgress.meals[id] = [...meals[id], elem];
+  //   localStorage.setItem('inProgressRecipes', JSON.stringify(objInProgress));
+  // };
 
   return (
     <div>
@@ -118,7 +116,7 @@ export default function RecipeInProgress(props) {
                             type="checkbox"
                             id={ element }
                             // checked={ isChecked[index] }
-                            onChange={ () => handleCheck(element) }
+                            // onChange={ () => handleCheck(element) }
                           />
                           {element}
                         </label>
