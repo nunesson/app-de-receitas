@@ -63,6 +63,24 @@ function Provider({ children }) {
     }
   }, [radioInput, recipeType, searchInput, setResultsFunc]);
 
+  const verifyRecipeStatus = useCallback(() => {
+    if (localStorage.getItem('doneRecipes')) {
+      const done = Object.values(JSON.parse(localStorage.getItem('doneRecipes', '[]')));
+      const recipeInProgress = Object.values(JSON
+        .parse(localStorage.getItem('inProgressRecipes')));
+      if (done
+        .filter((e) => e.id === recipeDetail[0].idMeal || recipeDetail[0].idDrink)) {
+        setRecipeStatus('done');
+      }
+      if (recipeInProgress
+        .filter((e) => e.id === recipeDetail[0].idMeal || recipeDetail[0].idDrink)) {
+        setRecipeStatus('inProgress');
+      } else {
+        setRecipeStatus('new');
+      }
+    }
+  }, [recipeDetail]);
+
   useEffect(() => {
     if (results.length === 1 && pageTitle === 'meals') {
       history.push(`/meals/${results[0].idMeal}`);
@@ -121,6 +139,7 @@ function Provider({ children }) {
       apiSearch,
       setRecipesFilter,
       setIsAlertVisible,
+      verifyRecipeStatus,
     }),
     [btnDisable,
       email,
@@ -147,6 +166,7 @@ function Provider({ children }) {
       apiSearch,
       recipesFilter,
       isAlertVisible,
+      verifyRecipeStatus,
     ],
   );
 
