@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import ButtonShareInProgress from '../../components/ButtonShareInProgress';
+import FavoriteButtonInProgress from '../../components/FavoriteButtonInProgress';
 import MyContext from '../../context/MyContext';
 import fetchAPI from '../../services/fetchAPI';
 // import './recipeInProgress.css';
@@ -73,11 +75,10 @@ export default function RecipeInProgress(props) {
 
   return (
     <div>
-      {/* { !loading && console.log(recipe.inProgressRecipes.meals[id])} */}
       {
         !loading && (
           <div className="in-progess-container">
-            <p>{inProgress[0].idMeal || inProgress[0].idDrink }</p>
+            <p>{ inProgress[0].idMeal || inProgress[0].idDrink }</p>
             <img
               data-testid="recipe-photo"
               src={ inProgress[0].strMealThumb || inProgress[0].strDrinkThumb }
@@ -86,19 +87,7 @@ export default function RecipeInProgress(props) {
             <h3 data-testid="recipe-title">
               { inProgress[0].strMeal || inProgress[0].strDrink }
             </h3>
-            <button
-              type="button"
-              data-testid="share-btn"
-            >
-              Compartilhar
-            </button>
-            <button
-              type="button"
-              data-testid="favorite-btn"
-            >
-              Favoritar
-            </button>
-            <h4 data-testid="recipe-category">{inProgress[0].strCategory }</h4>
+            <h4 data-testid="recipe-category">{ inProgress[0].strCategory }</h4>
             <div>
               {
                 ingredients.map((element, index) => {
@@ -115,10 +104,10 @@ export default function RecipeInProgress(props) {
                             name={ index }
                             type="checkbox"
                             id={ element }
-                            // checked={ isChecked[index] }
-                            // onChange={ () => handleCheck(element) }
+                          // checked={ isChecked[index] }
+                          // onChange={ () => handleCheck(element) }
                           />
-                          {element}
+                          { element }
                         </label>
                       </div>
                     );
@@ -126,7 +115,9 @@ export default function RecipeInProgress(props) {
                 })
               }
             </div>
-            <p data-testid="instructions">{inProgress[0].strInstructions }</p>
+            <p data-testid="instructions">{ inProgress[0].strInstructions }</p>
+            <ButtonShareInProgress />
+            <FavoriteButtonInProgress />
             <button
               type="button"
               data-testid="finish-recipe-btn"

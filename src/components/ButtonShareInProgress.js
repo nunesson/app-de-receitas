@@ -16,7 +16,6 @@ function ButtonShareInProgress() {
 
   return (
     <>
-      { console.log(params) }
       <button
         data-testid="share-btn"
         type="button"
