@@ -28,31 +28,22 @@ class Recipes extends Component {
     const require = await fetch(endPt1);
     const { meals } = await require.json();
 
-    if (meals === undefined) {
-      this.setState({ loading: true });
-    } else {
-      const resMeals = meals.filter((meal, i) => i <= itemsLength);
-      this.setState({
-        meals: resMeals,
-        loading: false,
-      });
-    }
+    const resMeals = meals.filter((meal, i) => i <= itemsLength);
+    this.setState({
+      meals: resMeals,
+      loading: false,
+    });
   };
 
   filterMealsFtch = async () => {
     const filteredItemsLength = 4;
     const require = await fetch(endPt2);
     const { meals } = await require.json();
-
-    if (meals === undefined) {
-      this.setState({ loading: true });
-    } else {
-      const filteredMeals = meals.filter((meal, i) => i <= filteredItemsLength);
-      this.setState({
-        filteredMeal: filteredMeals,
-        loading: false,
-      });
-    }
+    const filteredMeals = meals.filter((meal, i) => i <= filteredItemsLength);
+    this.setState({
+      filteredMeal: filteredMeals,
+      loading: false,
+    });
   };
 
   drinkFtch = async () => {

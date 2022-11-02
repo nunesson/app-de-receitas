@@ -7,8 +7,8 @@ export default function Recommendations({ typeAPI }) {
   const NUMBER_5 = 5;
   return (
     <Carousel>
-      {
-        typeAPI.map((e, i) => i <= NUMBER_5 && (
+      { typeAPI
+        && typeAPI.map((e, i) => i <= NUMBER_5 && (
           <Carousel.Item
             key={ i }
             data-testid={ `${i}-recommendation-card` }
@@ -20,8 +20,7 @@ export default function Recommendations({ typeAPI }) {
               { e.strDrink || e.strMeal }
             </h1>
           </Carousel.Item>
-        ))
-      }
+        ))}
     </Carousel>
   );
 }
