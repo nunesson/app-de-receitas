@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import MyContext from '../../context/MyContext';
 import fetchAPI from '../../services/fetchAPI';
-// import './recipeInProgress.css';
+import './recipeInProgress.css';
 
 export default function RecipeInProgress(props) {
   const {
@@ -14,15 +14,8 @@ export default function RecipeInProgress(props) {
   } = useContext(MyContext);
 
   const [loading, setLoading] = useState(true);
-  // const [recipe, setRecipe] = useState({});
 
-  const initalStateChecked = {};
-
-  ingredients.forEach((el, index) => { initalStateChecked[index] = el; });
-
-  // console.log(initalStateChecked);
-
-  // const [isChecked, setIsChecked] = useState(initalStateChecked);
+  const [isChecked, setIsChecked] = useState();
 
   const { id } = useParams();
   const { location: { pathname } } = props;
@@ -53,9 +46,44 @@ export default function RecipeInProgress(props) {
     setLoading(false);
   };
 
+  // const checkEvery = () => {
+  //   const check = Array.from(document.querySelectorAll('.check-ingredient'));
+  //   const isTrue = check.every(({ checked }) => checked === true);
+  //   setIsChecked(isTrue);
+  // };
+
   useEffect(() => {
     apiData();
   }, []);
+
+  const checkEvery = async () => {
+    await apiData();
+    if (apiData === undefined) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+      const check = Array.from(document.querySelectorAll('.check-ingredient'));
+      const checkBoxess = check.map((el) => console.log(el.checked));
+      console.log(checkBoxess);
+    }
+  };
+
+  useEffect(() => {
+    checkEvery();
+  }, []);
+
+  const checkStyle = async ({ target }) => {
+    setIsChecked(true);
+    const { checked, name } = target;
+    if (checked) {
+      const checkedBox = document.getElementById(name);
+      checkedBox.classList.add('strikethrough');
+    }
+    if (!checked) {
+      const checkedBox = document.getElementById(name);
+      checkedBox.classList.remove('strikethrough');
+    }
+  };
 
   // const handleCheck = async (elem) => { // ==> TENTATIVA DE FAZER O ARRAY DE OBJETOS
   //   const getLocalStorage = JSON.parse(localStorage.getItem('inProgressRecipes'));
@@ -108,15 +136,15 @@ export default function RecipeInProgress(props) {
                         <label
                           data-testid={ `${index}-ingredient-step` }
                           htmlFor={ element }
-                          className="strikethrough"
+                          id={ element }
+                          // className="label-ingredient"
                         >
                           <input
                             className="check-ingredient"
-                            name={ index }
+                            name={ element }
                             type="checkbox"
                             id={ element }
-                            // checked={ isChecked[index] }
-                            // onChange={ () => handleCheck(element) }
+                            onChange={ checkStyle }
                           />
                           {element}
                         </label>
