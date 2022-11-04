@@ -69,24 +69,6 @@ export default function RecipeDetails(props) {
     setLoading(false);
   };
 
-  // const verifyRecipeStatus = () => {
-  //   if (localStorage.getItem('doneRecipes')) {
-  //     const done = Object.values(JSON.parse(localStorage.getItem('doneRecipes', '[]')));
-  //     const inProgress = Object.values(JSON
-  //       .parse(localStorage.getItem('inProgressRecipes')));
-  //     if (done
-  //       .filter((e) => e.id === recipeDetail[0].idMeal || recipeDetail[0].idDrink)) {
-  //       setRecipeStatus('done');
-  //     }
-  //     if (inProgress
-  //       .filter((e) => e.id === recipeDetail[0].idMeal || recipeDetail[0].idDrink)) {
-  //       setRecipeStatus('inProgress');
-  //     } else {
-  //       setRecipeStatus('new');
-  //     }
-  //   }
-  // };
-
   const sendToInProgress = () => {
     history.push(`/${mealOrDrink}/${recipeDetail[0].idMeal
       || recipeDetail[0].idDrink}/in-progress`);

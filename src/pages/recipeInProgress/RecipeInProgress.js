@@ -5,7 +5,7 @@ import ButtonShareInProgress from '../../components/ButtonShareInProgress';
 import FavoriteButtonInProgress from '../../components/FavoriteButtonInProgress';
 import MyContext from '../../context/MyContext';
 import fetchAPI from '../../services/fetchAPI';
-// import './recipeInProgress.css';
+import './recipeInProgress.css';
 
 export default function RecipeInProgress(props) {
   const {
@@ -16,15 +16,9 @@ export default function RecipeInProgress(props) {
   } = useContext(MyContext);
 
   const [loading, setLoading] = useState(true);
-  // const [recipe, setRecipe] = useState({});
 
-  const initalStateChecked = {};
-
-  ingredients.forEach((el, index) => { initalStateChecked[index] = el; });
-
-  // console.log(initalStateChecked);
-
-  // const [isChecked, setIsChecked] = useState(initalStateChecked);
+  const [allChecked, setAllChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState([]);
 
   const { id } = useParams();
   const { location: { pathname } } = props;
@@ -59,19 +53,39 @@ export default function RecipeInProgress(props) {
     apiData();
   }, []);
 
-  // const handleCheck = async (elem) => { // ==> TENTATIVA DE FAZER O ARRAY DE OBJETOS
-  //   const getLocalStorage = JSON.parse(localStorage.getItem('inProgressRecipes'));
-  //   const { meals } = getLocalStorage;
-  //   console.log(meals);
-  //   const objInProgress = {
-  //     drinks: {
-  //     },
-  //     meals: {
-  //     },
-  //   };
-  //   objInProgress.meals[id] = [...meals[id], elem];
-  //   localStorage.setItem('inProgressRecipes', JSON.stringify(objInProgress));
-  // };
+  const checkStyle = async ({ target }) => {
+    const check = Array.from(document.querySelectorAll('.check-ingredient'));
+    const checkedBoxess = check.every((ele) => ele.checked === true);
+    const checkedMap = check.map((ele) => ele.checked);
+    console.log(checkedBoxess);
+    console.log(checkedMap);
+    setAllChecked(checkedBoxess);
+    setIsChecked(checkedMap);
+
+    const { checked, name } = target;
+    if (checked) {
+      const checkedBox = document.getElementById(name);
+      checkedBox.classList.add('strikethrough');
+    }
+    if (!checked) {
+      const checkedBox = document.getElementById(name);
+      checkedBox.classList.remove('strikethrough');
+    }
+  };
+
+  const handleCheck = async (elem) => { // ==> TENTATIVA DE FAZER O ARRAY DE OBJETOS
+    const getLocalStorage = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    const { meals } = getLocalStorage;
+    console.log(meals);
+    const objInProgress = {
+      drinks: {
+      },
+      meals: {
+      },
+    };
+    objInProgress.meals[id] = [...meals[id], elem];
+    localStorage.setItem('inProgressRecipes', JSON.stringify(objInProgress));
+  };
 
   return (
     <div>
@@ -97,15 +111,17 @@ export default function RecipeInProgress(props) {
                         <label
                           data-testid={ `${index}-ingredient-step` }
                           htmlFor={ element }
-                          className="strikethrough"
+                          id={ element }
+                          // className="label-ingredient"
                         >
                           <input
                             className="check-ingredient"
-                            name={ index }
+                            name={ element }
                             type="checkbox"
                             id={ element }
-                          // checked={ isChecked[index] }
-                          // onChange={ () => handleCheck(element) }
+                            onClick={ () => handleCheck(element) }
+                            checked={ isChecked[index] }
+                            onChange={ checkStyle }
                           />
                           { element }
                         </label>
@@ -121,6 +137,7 @@ export default function RecipeInProgress(props) {
             <button
               type="button"
               data-testid="finish-recipe-btn"
+              disabled={ !allChecked }
             >
               Finalizar receita
             </button>
