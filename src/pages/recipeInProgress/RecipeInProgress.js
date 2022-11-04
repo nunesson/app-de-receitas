@@ -15,7 +15,8 @@ export default function RecipeInProgress(props) {
 
   const [loading, setLoading] = useState(true);
 
-  const [isChecked, setIsChecked] = useState();
+  const [allChecked, setAllChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState([]);
 
   const { id } = useParams();
   const { location: { pathname } } = props;
@@ -46,34 +47,19 @@ export default function RecipeInProgress(props) {
     setLoading(false);
   };
 
-  // const checkEvery = () => {
-  //   const check = Array.from(document.querySelectorAll('.check-ingredient'));
-  //   const isTrue = check.every(({ checked }) => checked === true);
-  //   setIsChecked(isTrue);
-  // };
-
   useEffect(() => {
     apiData();
   }, []);
 
-  const checkEvery = async () => {
-    await apiData();
-    if (apiData === undefined) {
-      setLoading(true);
-    } else {
-      setLoading(false);
-      const check = Array.from(document.querySelectorAll('.check-ingredient'));
-      const checkBoxess = check.map((el) => console.log(el.checked));
-      console.log(checkBoxess);
-    }
-  };
-
-  useEffect(() => {
-    checkEvery();
-  }, []);
-
   const checkStyle = async ({ target }) => {
-    setIsChecked(true);
+    const check = Array.from(document.querySelectorAll('.check-ingredient'));
+    const checkedBoxess = check.every((ele) => ele.checked === true);
+    const checkedMap = check.map((ele) => ele.checked);
+    console.log(checkedBoxess);
+    console.log(checkedMap);
+    setAllChecked(checkedBoxess);
+    setIsChecked(checkedMap);
+
     const { checked, name } = target;
     if (checked) {
       const checkedBox = document.getElementById(name);
@@ -85,19 +71,19 @@ export default function RecipeInProgress(props) {
     }
   };
 
-  // const handleCheck = async (elem) => { // ==> TENTATIVA DE FAZER O ARRAY DE OBJETOS
-  //   const getLocalStorage = JSON.parse(localStorage.getItem('inProgressRecipes'));
-  //   const { meals } = getLocalStorage;
-  //   console.log(meals);
-  //   const objInProgress = {
-  //     drinks: {
-  //     },
-  //     meals: {
-  //     },
-  //   };
-  //   objInProgress.meals[id] = [...meals[id], elem];
-  //   localStorage.setItem('inProgressRecipes', JSON.stringify(objInProgress));
-  // };
+  const handleCheck = async (elem) => { // ==> TENTATIVA DE FAZER O ARRAY DE OBJETOS
+    const getLocalStorage = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    const { meals } = getLocalStorage;
+    console.log(meals);
+    const objInProgress = {
+      drinks: {
+      },
+      meals: {
+      },
+    };
+    objInProgress.meals[id] = [...meals[id], elem];
+    localStorage.setItem('inProgressRecipes', JSON.stringify(objInProgress));
+  };
 
   return (
     <div>
@@ -144,6 +130,8 @@ export default function RecipeInProgress(props) {
                             name={ element }
                             type="checkbox"
                             id={ element }
+                            onClick={ () => handleCheck(element) }
+                            checked={ isChecked[index] }
                             onChange={ checkStyle }
                           />
                           {element}
@@ -158,6 +146,7 @@ export default function RecipeInProgress(props) {
             <button
               type="button"
               data-testid="finish-recipe-btn"
+              disabled={ !allChecked }
             >
               Finalizar receita
             </button>
