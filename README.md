@@ -1,7 +1,12 @@
-# app-de-receitas
+# App de Receitas
 
 Projeto de conclusão do módulo de Front-End da Trybe,
 feito em grupo.
+
+Membros do grupo:
+Natalia Augusto: https://www.linkedin.com/in/natalia-augusto/
+Mychel Albuquerque: https://www.linkedin.com/in/mychel-albuquerque/
+Guilherme Fagundes: https://www.linkedin.com/in/25b744240-guilherme-fagundes/
 
 Objetivo do App:
 
