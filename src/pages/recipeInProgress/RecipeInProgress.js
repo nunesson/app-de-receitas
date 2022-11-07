@@ -13,6 +13,7 @@ export default function RecipeInProgress(props) {
     inProgress,
     ingredients,
     setIngredients,
+    handleFinish,
   } = useContext(MyContext);
 
   const [loading, setLoading] = useState(true);
@@ -45,6 +46,7 @@ export default function RecipeInProgress(props) {
       result = result.drinks;
       setIngredients(objectEntries(result, 'strIngredient'));
     }
+    console.log(result);
     setInProgress(result);
     setLoading(false);
   };
@@ -57,8 +59,6 @@ export default function RecipeInProgress(props) {
     const check = Array.from(document.querySelectorAll('.check-ingredient'));
     const checkedBoxess = check.every((ele) => ele.checked === true);
     const checkedMap = check.map((ele) => ele.checked);
-    console.log(checkedBoxess);
-    console.log(checkedMap);
     setAllChecked(checkedBoxess);
     setIsChecked(checkedMap);
 
@@ -73,19 +73,19 @@ export default function RecipeInProgress(props) {
     }
   };
 
-  const handleCheck = async (elem) => { // ==> TENTATIVA DE FAZER O ARRAY DE OBJETOS
-    const getLocalStorage = JSON.parse(localStorage.getItem('inProgressRecipes'));
-    const { meals } = getLocalStorage;
-    console.log(meals);
-    const objInProgress = {
-      drinks: {
-      },
-      meals: {
-      },
-    };
-    objInProgress.meals[id] = [...meals[id], elem];
-    localStorage.setItem('inProgressRecipes', JSON.stringify(objInProgress));
-  };
+  // const handleCheck = async (elem) => { // ==> TENTATIVA DE FAZER O ARRAY DE OBJETOS
+  //   const getLocalStorage = JSON.parse(localStorage.getItem('inProgressRecipes'));
+  //   const { meals } = getLocalStorage;
+  //   console.log(meals);
+  //   const objInProgress = {
+  //     drinks: {
+  //     },
+  //     meals: {
+  //     },
+  //   };
+  //   objInProgress.meals[id] = [...meals[id], elem];
+  //   localStorage.setItem('inProgressRecipes', JSON.stringify(objInProgress));
+  // };
 
   return (
     <div>
@@ -115,11 +115,12 @@ export default function RecipeInProgress(props) {
                           // className="label-ingredient"
                         >
                           <input
+                            data-testid={ `${index}-check-ingredient` }
                             className="check-ingredient"
                             name={ element }
                             type="checkbox"
                             id={ element }
-                            onClick={ () => handleCheck(element) }
+                            // onClick={ () => handleCheck(element) }
                             checked={ isChecked[index] }
                             onChange={ checkStyle }
                           />
@@ -138,6 +139,7 @@ export default function RecipeInProgress(props) {
               type="button"
               data-testid="finish-recipe-btn"
               disabled={ !allChecked }
+              onClick={ () => handleFinish(pathname, id) }
             >
               Finalizar receita
             </button>

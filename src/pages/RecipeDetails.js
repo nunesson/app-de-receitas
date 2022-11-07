@@ -25,7 +25,8 @@ export default function RecipeDetails(props) {
     mealAPI,
     setMealAPI,
     recipeStatus,
-    verifyRecipeStatus,
+    // setRecipeStatus,
+    // verifyRecipeStatus,
   } = useContext(MyContext);
 
   const [loading, setLoading] = useState(true);
@@ -74,10 +75,29 @@ export default function RecipeDetails(props) {
       || recipeDetail[0].idDrink}/in-progress`);
   };
 
+  // const verifyRecipeStatus = () => {
+  //   if (localStorage.getItem('doneRecipes')) {
+  //     const done = Object.values(JSON.parse(localStorage.getItem('doneRecipes')));
+  //     const recipeInProgress = Object.values(JSON
+  //       .parse(localStorage.getItem('inProgressRecipes')));
+  //     if (done
+  //       .filter((e) => e.id === id)) {
+  //       setRecipeStatus('done');
+  //     }
+  //     console.log(done);
+  //     if (recipeInProgress
+  //       .filter((e) => e.id === drinks || meals)) {
+  //       setRecipeStatus('inProgress');
+  //     } else {
+  //       setRecipeStatus('new');
+  //     }
+  //   }
+  // };
+
   useEffect(() => {
     apiData();
     // setRecipeStatus('new');
-    verifyRecipeStatus();
+    // verifyRecipeStatus();
   }, []);
 
   return (

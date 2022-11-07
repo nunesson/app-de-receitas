@@ -63,23 +63,77 @@ function Provider({ children }) {
     }
   }, [radioInput, recipeType, searchInput, setResultsFunc]);
 
-  const verifyRecipeStatus = useCallback(() => {
-    if (localStorage.getItem('doneRecipes')) {
-      const done = Object.values(JSON.parse(localStorage.getItem('doneRecipes', '[]')));
-      const recipeInProgress = Object.values(JSON
-        .parse(localStorage.getItem('inProgressRecipes')));
-      if (done
-        .filter((e) => e.id === recipeDetail[0].idMeal || recipeDetail[0].idDrink)) {
-        setRecipeStatus('done');
-      }
-      if (recipeInProgress
-        .filter((e) => e.id === recipeDetail[0].idMeal || recipeDetail[0].idDrink)) {
-        setRecipeStatus('inProgress');
+  // const verifyRecipeStatus = () => {
+  //   if (localStorage.getItem('doneRecipes')) {
+  //     const done = Object.values(JSON.parse(localStorage.getItem('doneRecipes')));
+  //     const recipeInProgress = Object.values(JSON
+  //       .parse(localStorage.getItem('inProgressRecipes')));
+  //     // if (done
+  //     //   .filter((e) => e.id === id)) {
+  //     //   setRecipeStatus('done');
+  //     // }
+  //     console.log(done);
+  //     if (recipeInProgress !== null && recipeInProgress
+  //       .filter((e) => e.id === drinks || meals)) {
+  //       setRecipeStatus('inProgress');
+  //     } else {
+  //       setRecipeStatus('new');
+  //     }
+  //   }
+  // };
+
+  const handleFinish = useCallback(async (pathname, id) => {
+    let result = '';
+    const dateNow = new Date();
+    const getLocalStorage = JSON.parse(localStorage.getItem('doneRecipes'));
+    if (pathname.includes('meals')) {
+      result = await fetchAPI('themealdb', 'lookup', 'i', id);
+      const recipeFinished = {
+        id,
+        type: 'meal',
+        nationality: result.meals[0].strArea,
+        category: result.meals[0].strCategory,
+        alcoholicOrNot: '',
+        name: result.meals[0].strMeal,
+        image: result.meals[0].strMealThumb,
+        doneDate: dateNow.toISOString(),
+        tags: result.meals[0].strTags !== null ? result.meals[0].strTags.split(',') : '',
+      };
+      if (getLocalStorage === null) {
+        localStorage.setItem('doneRecipes', JSON.stringify([recipeFinished]));
       } else {
-        setRecipeStatus('new');
+        localStorage.setItem('doneRecipes', JSON.stringify([
+          ...getLocalStorage,
+          recipeFinished,
+        ]));
       }
+      history.push('/done-recipes');
+    } else {
+      result = await fetchAPI('thecocktaildb', 'lookup', 'i', id);
+      const recipeFinished = {
+        id,
+        type: 'drink',
+        nationality: '',
+        category: result.drinks[0].strCategory,
+        alcoholicOrNot: result.drinks[0].strAlcoholic,
+        name: result.drinks[0].strDrink,
+        image: result.drinks[0].strDrinkThumb,
+        doneDate: dateNow.toISOString(),
+        tags: [],
+      };
+      console.log(recipeFinished);
+      console.log(getLocalStorage);
+      if (getLocalStorage === null) {
+        localStorage.setItem('doneRecipes', JSON.stringify([recipeFinished]));
+      } else {
+        localStorage.setItem('doneRecipes', JSON.stringify([
+          ...getLocalStorage,
+          recipeFinished,
+        ]));
+      }
+      history.push('/done-recipes');
     }
-  }, [recipeDetail]);
+  }, [history]);
 
   useEffect(() => {
     if (results.length === 1 && pageTitle === 'meals') {
@@ -139,7 +193,8 @@ function Provider({ children }) {
       apiSearch,
       setRecipesFilter,
       setIsAlertVisible,
-      verifyRecipeStatus,
+      handleFinish,
+      // verifyRecipeStatus,
     }),
     [btnDisable,
       email,
@@ -166,7 +221,7 @@ function Provider({ children }) {
       apiSearch,
       recipesFilter,
       isAlertVisible,
-      verifyRecipeStatus,
+      handleFinish,
     ],
   );
 
