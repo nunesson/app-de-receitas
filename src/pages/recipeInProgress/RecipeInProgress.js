@@ -5,7 +5,7 @@ import ButtonShareInProgress from '../../components/ButtonShareInProgress';
 import FavoriteButtonInProgress from '../../components/FavoriteButtonInProgress';
 import MyContext from '../../context/MyContext';
 import fetchAPI from '../../services/fetchAPI';
-// import './recipeInProgress.css';
+import './recipeInProgress.css';
 
 export default function RecipeInProgress(props) {
   const {
@@ -13,18 +13,13 @@ export default function RecipeInProgress(props) {
     inProgress,
     ingredients,
     setIngredients,
+    handleFinish,
   } = useContext(MyContext);
 
   const [loading, setLoading] = useState(true);
-  // const [recipe, setRecipe] = useState({});
 
-  const initalStateChecked = {};
-
-  ingredients.forEach((el, index) => { initalStateChecked[index] = el; });
-
-  // console.log(initalStateChecked);
-
-  // const [isChecked, setIsChecked] = useState(initalStateChecked);
+  const [allChecked, setAllChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState([]);
 
   const { id } = useParams();
   const { location: { pathname } } = props;
@@ -51,6 +46,7 @@ export default function RecipeInProgress(props) {
       result = result.drinks;
       setIngredients(objectEntries(result, 'strIngredient'));
     }
+    console.log(result);
     setInProgress(result);
     setLoading(false);
   };
@@ -58,6 +54,24 @@ export default function RecipeInProgress(props) {
   useEffect(() => {
     apiData();
   }, []);
+
+  const checkStyle = async ({ target }) => {
+    const check = Array.from(document.querySelectorAll('.check-ingredient'));
+    const checkedBoxess = check.every((ele) => ele.checked === true);
+    const checkedMap = check.map((ele) => ele.checked);
+    setAllChecked(checkedBoxess);
+    setIsChecked(checkedMap);
+
+    const { checked, name } = target;
+    if (checked) {
+      const checkedBox = document.getElementById(name);
+      checkedBox.classList.add('strikethrough');
+    }
+    if (!checked) {
+      const checkedBox = document.getElementById(name);
+      checkedBox.classList.remove('strikethrough');
+    }
+  };
 
   // const handleCheck = async (elem) => { // ==> TENTATIVA DE FAZER O ARRAY DE OBJETOS
   //   const getLocalStorage = JSON.parse(localStorage.getItem('inProgressRecipes'));
@@ -97,15 +111,18 @@ export default function RecipeInProgress(props) {
                         <label
                           data-testid={ `${index}-ingredient-step` }
                           htmlFor={ element }
-                          className="strikethrough"
+                          id={ element }
+                          // className="label-ingredient"
                         >
                           <input
+                            data-testid={ `${index}-check-ingredient` }
                             className="check-ingredient"
-                            name={ index }
+                            name={ element }
                             type="checkbox"
                             id={ element }
-                          // checked={ isChecked[index] }
-                          // onChange={ () => handleCheck(element) }
+                            // onClick={ () => handleCheck(element) }
+                            checked={ isChecked[index] }
+                            onChange={ checkStyle }
                           />
                           { element }
                         </label>
@@ -121,6 +138,8 @@ export default function RecipeInProgress(props) {
             <button
               type="button"
               data-testid="finish-recipe-btn"
+              disabled={ !allChecked }
+              onClick={ () => handleFinish(pathname, id) }
             >
               Finalizar receita
             </button>

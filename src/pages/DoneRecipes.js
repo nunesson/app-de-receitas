@@ -76,7 +76,7 @@ function DoneRecipes() {
   const recipeCard = (recipes) => (recipes.map((recipe, index) => {
     const { id, type, image, name, doneDate, tags } = recipe;
     return (
-      <div key={ id }>
+      <div key={ index }>
         <Link to={ redirectPage(type, id) }>
           <img
             src={ image }
